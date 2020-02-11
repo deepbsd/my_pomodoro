@@ -3,6 +3,7 @@
 short_break=5
 long_break=25
 pomodoro=25
+completed_pomodoros=""
 ((durationinsecs=${pomodoro}*3600/60))
 
 
@@ -28,6 +29,10 @@ remainingsecs(){
     printf "%02d:%02d" $m $s
 }
 
+completed(){
+    completed_pomodoros="${completed_pomodoros}*"
+}
+
 
 show_pom(){
 
@@ -39,8 +44,8 @@ cat <<EOF
                     Welcome to MyPomodoro!
 
         Short break: ${short_break}     Elapsed: ${elapsed}
-        Long break: ${long_break}       Remaining: ${remaining}
-
+        Long break: ${long_break}     Remaining: ${remaining}
+        Goal: ********     Completed: ${completed_pomodoros}
 
 
 EOF
@@ -53,6 +58,7 @@ while true; do
     elapsed=$(convertsecs $pomo)
     remaining=$(remainingsecs $pomo)
     if [ $pomo -gt $durationinsecs ]; then
+        completed_pomodoros=$(completed)
         break
     fi
     sleep 1
