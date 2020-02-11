@@ -59,6 +59,7 @@ while true; do
     remaining=$(remainingsecs $pomo)
     if [ $pomo -gt $durationinsecs ]; then
         completed_pomodoros=$(completed)
+        start_time=$(date +%s)
         break
     fi
     sleep 1
