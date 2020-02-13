@@ -87,21 +87,22 @@ cat <<EOF
 EOF
 
 }
+    
+#start_time=$(date +%s)
 
 while true; do
-    #show_pom
-    start_time=$(date +%s)
-    run_break 5
-    #pomo=$(compute $start_time)
-    #elapsed=$(convertsecs $pomo)
-    #remaining=$(remainingsecs $pomo $pomodoro)
-    #((pomo=$durationsecs + 10))
-    #if [ $pomo -gt $durationinsecs ]; then
-    #    completed_pomodoros=$(completed)
-    #    start_time=$(date +%s)
-    #    run_break 5
-    #fi
-    #sleep 1
+    show_pom
+    #run_break 5
+    pomo=$(compute $start_time)
+    elapsed=$(convertsecs $pomo)
+    remaining=$(remainingsecs $pomo $pomodoro)
+    ((pomo=$durationsecs + 10))
+    if [ $pomo -gt $durationinsecs ]; then
+        completed_pomodoros=$(completed)
+        start_time=$(date +%s)
+        run_break 5
+    fi
+    sleep 1
 done
 
 
