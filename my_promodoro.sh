@@ -10,8 +10,9 @@ completed_pomodoros=""
 start_time=$(date +%s)
 
 compute(){
+   start_secs=${1}
    now_time=$(date +%s)
-   elapsed=$( expr $now_time - $start_time )
+   elapsed=$( expr $now_time - $start_secs )
    printf "%d " "${elapsed}"
 }
 
@@ -37,12 +38,16 @@ run_break(){
     start=$(date +%s)
     now=$(date +%s)
     length=${1}
-    elapsed=$(expr $now - $start)
-    remaining=$(remainingsecs $elapsed $length)
+    elapsed_secs=$(expr $now - $start)
 
 
-while [ $elapsed -le $length ]; do
+#while [ $elapsed_secs -le $length ]; do
+while true; do
     now=$(date +%s)
+    pomo=$(computesecs $start)
+    elapsed_secs=$(expr $now - $start)
+    elapsed=$(convertsecs $pomo)
+    remaining=$(remainingsecs $elapsed $length)
     if [ $length -gt 5 ]; then
         break_type="Long Break"
     else
@@ -84,17 +89,19 @@ EOF
 }
 
 while true; do
-    show_pom
-    pomo=$(compute)
-    elapsed=$(convertsecs $pomo)
-    remaining=$(remainingsecs $pomo $pomodoro)
-    ((pomo=$durationsecs + 10))
-    if [ $pomo -gt $durationinsecs ]; then
-        completed_pomodoros=$(completed)
-        start_time=$(date +%s)
-        run_break 5
-    fi
-    sleep 1
+    #show_pom
+    start_time=$(date +%s)
+    run_break 5
+    #pomo=$(compute $start_time)
+    #elapsed=$(convertsecs $pomo)
+    #remaining=$(remainingsecs $pomo $pomodoro)
+    #((pomo=$durationsecs + 10))
+    #if [ $pomo -gt $durationinsecs ]; then
+    #    completed_pomodoros=$(completed)
+    #    start_time=$(date +%s)
+    #    run_break 5
+    #fi
+    #sleep 1
 done
 
 
