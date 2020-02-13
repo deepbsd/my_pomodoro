@@ -24,15 +24,46 @@ convertsecs(){
 }
 
 remainingsecs(){
-    ((m=${pomodoro}-1-${1}%3600/60))
+    ((m=${2}-1-${1}%3600/60))
     ((s=(60-${1}%60)))
     printf "%02d:%02d" $m $s
 }
 
 completed(){
-    completed_pomodoros="${completed_pomodoros}*"
+    completed_pomodoros+=$(echo "*")
 }
 
+run_break(){
+    start=$(date +%s)
+    now=$(date +%s)
+    length=${1}
+    elapsed=$(expr $now - $start)
+    remaining=$(remainingsecs $elapsed $length)
+
+
+while [ $elapsed -le $length ]; do
+    now=$(date +%s)
+    if [ $length -gt 5 ]; then
+        break_type="Long Break"
+    else
+        break_type="Short Break"
+    fi
+
+    clear
+
+cat <<EOBreak
+
+
+
+        Break: ${break_type}     Remaining:  ${remaining}
+                                 Elapsed: ${elapsed}
+
+
+
+EOBreak
+    sleep 1
+done
+}
 
 show_pom(){
 
@@ -56,11 +87,12 @@ while true; do
     show_pom
     pomo=$(compute)
     elapsed=$(convertsecs $pomo)
-    remaining=$(remainingsecs $pomo)
+    remaining=$(remainingsecs $pomo $pomodoro)
+    ((pomo=$durationsecs + 10))
     if [ $pomo -gt $durationinsecs ]; then
         completed_pomodoros=$(completed)
         start_time=$(date +%s)
-        break
+        run_break 5
     fi
     sleep 1
 done
