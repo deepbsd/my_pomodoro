@@ -13,8 +13,8 @@ short_break=5
 long_break=20
 pomodoro=25
 completed_pomodoros=""
-start_sound=./Ship_Bell-Mike_Koenig-1911209136.wav
-end_sound=./foghorn-daniel_simon.wav
+start_sound=./sounds/Ship_Bell-Mike_Koenig-1911209136.wav
+end_sound=./sounds/foghorn-daniel_simon.wav
 ((durationinmins=${pomodoro}*3600/60))
 
 ##  Set the start time in seconds
@@ -23,7 +23,7 @@ start_time=$(date +%s)
 ## make sure 'play' is installed...
 play_sound(){
     file=${1}
-    play $file
+    play -q $file
 }
 
 ## Play the start sound
@@ -64,6 +64,7 @@ completed(){
 ##  Runs a break, either a short one or long one
 ##  Expects an argument in minutes
 run_break(){
+    play_sound $end_sound
     start=$(date +%s)
     now=$(date +%s)
     length=${1}
@@ -77,11 +78,9 @@ run_break(){
         pomo=$(compute $start)
         minutes=$((elapsed_secs/60))
 
+        ## exit and start a new Pomodoro when break is spent
         if (($minutes >= $length)) ; then 
             return 0
-            play_sound $end_sound
-            sleep 5
-            play_sound $start_sound
         fi
 
         elapsed_secs=$(expr $now - $start)
