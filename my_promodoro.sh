@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-short_break=5
+short_break=1
 long_break=20
 pomodoro=1
 completed_pomodoros=""
@@ -32,12 +32,13 @@ remainingsecs(){
 }
 
 completed(){
-    completed_pomodoros+=$(echo "*")
+    #completed_pomodoros+=$(echo "*")
+    echo '*' 
 }
 
 run_break(){
     start=$(date +%s)
-    #now=$(date +%s)
+    now=$(date +%s)
     length=${1}
     elapsed_secs=$(expr $now - $start)
     minutes=$((elapsed_secs/60))
@@ -45,22 +46,19 @@ run_break(){
 
 
     while [ $minutes -le $length ]; do
-    if (($minutes >= $length)) ; then 
-        return 0
-    fi
-    now=$(date +%s)
-    pomo=$(compute $start)
-    minutes=$((elapsed_secs/60))
-    elapsed_secs=$(expr $now - $start)
-    remaining=$(remainingsecs $elapsed_secs $length)
-    elapsed=$(convertsecs $pomo)
-    if [ $length -gt 5 ]; then
-        break_type="Long Break"
-    else
-        break_type="Short Break"
-    fi
+        now=$(date +%s)
+        pomo=$(compute $start)
+        minutes=$((elapsed_secs/60))
+        elapsed_secs=$(expr $now - $start)
+        remaining=$(remainingsecs $elapsed_secs $length)
+        elapsed=$(convertsecs $pomo)
+        if [ $length -gt 5 ]; then
+            break_type="Long Break"
+        else
+            break_type="Short Break"
+        fi
 
-    clear
+        clear
 
 cat <<EOBreak
 
@@ -74,7 +72,12 @@ cat <<EOBreak
 
 EOBreak
 
-    sleep 1
+
+        if (($minutes >= $length)) ; then 
+            return 0
+        fi
+
+        sleep 1
     done
 }
 
@@ -102,12 +105,12 @@ while true; do
     elapsed=$(convertsecs $pomo)
     remaining=$(remainingsecs $pomo $pomodoro)
     if ! (( $pomo < $durationinmins )) ; then
-        completed_pomodoros=$(completed)
         if  [[  $(( ${#completed_pomodoros} % 4 )) == 0 ]] && [[ ${#completed_pomodoros} -ne 0 ]]; then
-            run_break 25
+            run_break ${long_break}
         else
-            run_break 5
+            run_break ${short_break}
         fi
+        completed_pomodoros+=$(completed)
         start_time=$(date +%s)
     fi
     sleep 1
