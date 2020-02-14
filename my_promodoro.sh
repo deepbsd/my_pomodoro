@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 short_break=5
-long_break=25
-pomodoro=25
+long_break=20
+pomodoro=5
 completed_pomodoros=""
 ((durationinsecs=${pomodoro}*3600/60))
 
@@ -96,11 +96,8 @@ EOF
 
 }
     
-#start_time=$(date +%s)
-
 while true; do
     show_pom
-    #run_break 5
     pomo=$(compute $start_time)
     elapsed=$(convertsecs $pomo)
     remaining=$(remainingsecs $pomo $pomodoro)
@@ -108,7 +105,11 @@ while true; do
     if [ $pomo -gt $durationinsecs ]; then
         completed_pomodoros=$(completed)
         start_time=$(date +%s)
-        run_break 5
+        if  $(( ${#completed_pomodoros} % 4 )) == 0 ; then
+            run_break 25
+        else
+            run_break 5
+        fi
     fi
     sleep 1
 done
