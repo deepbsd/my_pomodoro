@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-short_break=1
+short_break=5
 long_break=20
-pomodoro=1
+pomodoro=25
 completed_pomodoros=""
 ((durationinmins=${pomodoro}*3600/60))
 
@@ -32,7 +32,6 @@ remainingsecs(){
 }
 
 completed(){
-    #completed_pomodoros+=$(echo "*")
     echo '*' 
 }
 
@@ -49,6 +48,11 @@ run_break(){
         now=$(date +%s)
         pomo=$(compute $start)
         minutes=$((elapsed_secs/60))
+
+        if (($minutes >= $length)) ; then 
+            return 0
+        fi
+
         elapsed_secs=$(expr $now - $start)
         remaining=$(remainingsecs $elapsed_secs $length)
         elapsed=$(convertsecs $pomo)
@@ -63,19 +67,15 @@ run_break(){
 cat <<EOBreak
 
 
-        elapsed_secs: ${elapsed_secs}    minutes: ${minutes}     length: ${length}
+        //////////////////////   BREAK TIME  //////////////////////////////
 
         Break: ${break_type}     Remaining:  ${remaining}
+
                                Elapsed: ${elapsed}
 
 
 
 EOBreak
-
-
-        if (($minutes >= $length)) ; then 
-            return 0
-        fi
 
         sleep 1
     done
@@ -91,10 +91,10 @@ cat <<EOF
                     Welcome to MyPomodoro!
 
         Short break: ${short_break}     Elapsed: ${elapsed}
+
         Long break: ${long_break}     Remaining: ${remaining}
+
         Goal: ********     Completed: ${completed_pomodoros}
-
-
 EOF
 
 }
