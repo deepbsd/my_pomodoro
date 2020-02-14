@@ -5,6 +5,7 @@
 #  program to help you not waste time.
 #  This runs in a terminal, so you can use it 
 #  with a tiling window manager if desired.
+#  Requires 'play' is installed (from sox)
 #################################
 
 ##  Initial variables
@@ -12,11 +13,21 @@ short_break=5
 long_break=20
 pomodoro=25
 completed_pomodoros=""
+start_sound=./Ship_Bell-Mike_Koenig-1911209136.wav
+end_sound=./foghorn-daniel_simon.wav
 ((durationinmins=${pomodoro}*3600/60))
 
 ##  Set the start time in seconds
 start_time=$(date +%s)
 
+## make sure 'play' is installed...
+play_sound(){
+    file=${1}
+    play $file
+}
+
+## Play the start sound
+play_sound $start_sound
 
 ## Computes seconds elapsed from after 1st argument
 ## Expects argument in seconds
@@ -68,6 +79,9 @@ run_break(){
 
         if (($minutes >= $length)) ; then 
             return 0
+            play_sound $end_sound
+            sleep 5
+            play_sound $start_sound
         fi
 
         elapsed_secs=$(expr $now - $start)
@@ -133,6 +147,7 @@ while true; do
         fi
         completed_pomodoros+=$(completed)
         start_time=$(date +%s)
+        play_sound $start_sound
     fi
     sleep 1
 done
