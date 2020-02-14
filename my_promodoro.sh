@@ -1,14 +1,25 @@
 #!/usr/bin/env bash
 
+#################################
+#  Easy little pomodoro time mgmt
+#  program to help you not waste time.
+#  This runs in a terminal, so you can use it 
+#  with a tiling window manager if desired.
+#################################
+
+##  Initial variables
 short_break=5
 long_break=20
 pomodoro=25
 completed_pomodoros=""
 ((durationinmins=${pomodoro}*3600/60))
 
-
+##  Set the start time in seconds
 start_time=$(date +%s)
 
+
+## Computes seconds elapsed from after 1st argument
+## Expects argument in seconds
 compute(){
    start_secs=${1}
    now_time=$(date +%s)
@@ -16,7 +27,8 @@ compute(){
    printf "%d " "${elapsed}"
 }
 
-
+## Converts seconds to hours, minutes, seconds
+## Just displays minutes and seconds
 convertsecs(){
     ((h=${1}/3600))
     ((m=(${1}%3600)/60))
@@ -25,16 +37,21 @@ convertsecs(){
     printf "%02d:%02d" $m $s
 }
 
+## Computes minutes and seconds remaining from start time
+## and now time,  Expects now_seconds then start_time
 remainingsecs(){
     ((m=${2}-1-${1}%3600/60))
     ((s=(60-${1}%60)))
     printf "%02d:%02d" $m $s
 }
 
+## For showing a list of asterisks and completed Pomodoros
 completed(){
     echo '*' 
 }
 
+##  Runs a break, either a short one or long one
+##  Expects an argument in minutes
 run_break(){
     start=$(date +%s)
     now=$(date +%s)
@@ -81,6 +98,8 @@ EOBreak
     done
 }
 
+
+##  This is the main pomodoro screen
 show_pom(){
 
 clear
@@ -99,6 +118,8 @@ EOF
 
 }
     
+
+##  This is the main loop
 while true; do
     show_pom
     pomo=$(compute $start_time)
