@@ -2,9 +2,9 @@
 
 short_break=5
 long_break=20
-pomodoro=5
+pomodoro=1
 completed_pomodoros=""
-((durationinsecs=${pomodoro}*3600/60))
+((durationinmins=${pomodoro}*3600/60))
 
 
 start_time=$(date +%s)
@@ -44,11 +44,10 @@ run_break(){
 
 
 
-    while [ $minutes -lt $length ]; do
-    if $minutes -ge $length ; then
-        break
+    while [ $minutes -le $length ]; do
+    if (($minutes >= $length)) ; then 
+        return 0
     fi
-
     now=$(date +%s)
     pomo=$(compute $start)
     minutes=$((elapsed_secs/60))
@@ -74,6 +73,7 @@ cat <<EOBreak
 
 
 EOBreak
+
     sleep 1
     done
 }
@@ -101,15 +101,14 @@ while true; do
     pomo=$(compute $start_time)
     elapsed=$(convertsecs $pomo)
     remaining=$(remainingsecs $pomo $pomodoro)
-    ((pomo=$durationsecs + 10))
-    if [ $pomo -gt $durationinsecs ]; then
+    if ! (( $pomo < $durationinmins )) ; then
         completed_pomodoros=$(completed)
-        start_time=$(date +%s)
-        if  $(( ${#completed_pomodoros} % 4 )) == 0 ; then
+        if  [[  $(( ${#completed_pomodoros} % 4 )) == 0 ]] && [[ ${#completed_pomodoros} -ne 0 ]]; then
             run_break 25
         else
             run_break 5
         fi
+        start_time=$(date +%s)
     fi
     sleep 1
 done
