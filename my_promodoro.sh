@@ -111,6 +111,32 @@ EOBreak
     done
 }
 
+show_bar(){
+    count=0
+    period=${1}
+    length=${2}
+    start=$(date +%s)
+    spinner=('\' '|' '/' '--' '\' '|' '/' '--')
+
+
+    while true; do
+        now=$(date +%s)
+        elapsedsecs=$(compute $start)
+        elapsed=$(remainingsecs $elapsedsecs $start)
+        clear
+cat <<EOBar
+  ${period}      ${spinner[$count]}  ${elapsed}
+EOBar
+        sleep 1
+        if [ $count -lt 7 ]; then
+            ((count++))
+        else
+            count=0
+        fi
+
+    done
+
+}
 
 ##  This is the main pomodoro screen
 show_pom(){
@@ -134,21 +160,22 @@ EOF
 
 ##  This is the main loop
 while true; do
-    show_pom
-    pomo=$(compute $start_time)
-    elapsed=$(convertsecs $pomo)
-    remaining=$(remainingsecs $pomo $pomodoro)
-    if ! (( $pomo < $durationinmins )) ; then
-        if  [[  $(( ${#completed_pomodoros} % 4 )) == 0 ]] && [[ ${#completed_pomodoros} -ne 0 ]]; then
-            run_break ${long_break}
-        else
-            run_break ${short_break}
-        fi
-        completed_pomodoros+=$(completed)
-        start_time=$(date +%s)
-        play_sound $start_sound
-    fi
-    sleep 1
+    #show_pom
+    show_bar  "Short Break"  5
+    #pomo=$(compute $start_time)
+    #elapsed=$(convertsecs $pomo)
+    #remaining=$(remainingsecs $pomo $pomodoro)
+    #if ! (( $pomo < $durationinmins )) ; then
+    #    if  [[  $(( ${#completed_pomodoros} % 4 )) == 0 ]] && [[ ${#completed_pomodoros} -ne 0 ]]; then
+    #        run_break ${long_break}
+    #    else
+    #        run_break ${short_break}
+    #    fi
+    #    completed_pomodoros+=$(completed)
+    #    start_time=$(date +%s)
+    #    play_sound $start_sound
+    #fi
+    #sleep 1
 done
 
 
