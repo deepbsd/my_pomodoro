@@ -18,7 +18,7 @@ end_sound=./sounds/foghorn-daniel_simon.wav
 ((durationinmins=${pomodoro}*3600/60))
 
 ## Do run the i3bar version or regular version?
-[[ "$@" =~ 'b' ]] && run=true 
+[[ "$@" =~ 'b' ]] && run=true || unset run
 
 ##  Set the start time in seconds
 start_time=$(date +%s)
