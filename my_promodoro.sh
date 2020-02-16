@@ -17,6 +17,8 @@ start_sound=./sounds/Ship_Bell-Mike_Koenig-1911209136.wav
 end_sound=./sounds/foghorn-daniel_simon.wav
 ((durationinmins=${pomodoro}*3600/60))
 
+## Do run the i3bar version or regular version?
+[[ "$@" =~ 'b' ]] && run=true || run=null
 
 ##  Set the start time in seconds
 start_time=$(date +%s)
@@ -24,7 +26,7 @@ start_time=$(date +%s)
 ## make sure 'play' is installed...
 play_sound(){
     file=${1}
-    play -q $file
+    play -q $file 2>/dev/null
 }
 
 ## Play the start sound
@@ -173,7 +175,7 @@ EOF
 
 ##  This is the main loop
 while true; do
-    [ "$1" == '-b' ] && show_bar "Work" ${pomodoro} || show_pom "Work" ${pomodoro}
+    [ -n $run ] && show_bar "Work" ${pomodoro} || show_pom "Work" ${pomodoro}
 
     if  [[  $(( ${#completed_pomodoros} % 4 )) == 0 ]] && [[ ${#completed_pomodoros} -ne 0 ]]; then
         run_break ${long_break}
