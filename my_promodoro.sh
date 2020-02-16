@@ -53,6 +53,7 @@ convertsecs(){
 remainingsecs(){
     ((m=${2}-1-${1}%3600/60))
     ((s=(60-${1}%60)))
+    [ $m -eq -1 ] && m=0
     printf "%02d:%02d" $m $s
 }
 
@@ -86,7 +87,7 @@ run_break(){
         elapsed_secs=$(expr $now - $start)
         remaining=$(remainingsecs $elapsed_secs $length)
         elapsed=$(convertsecs $pomo)
-        if [ $length -gt 5 ]; then
+        if [ $length -ne $short_break ]; then
             break_type="Long Break"
         else
             break_type="Short Break"
@@ -99,11 +100,7 @@ cat <<EOBreak
 
         //////////////////////   BREAK TIME  //////////////////////////////
 
-        Break: ${break_type}     Remaining:  ${remaining}
-
-                               Elapsed: ${elapsed}
-
-
+        Break: ${break_type}    Elapsed: ${elapsed}   Remaining:  ${remaining}
 
 EOBreak
 
@@ -120,6 +117,7 @@ show_bar(){
 
 
     while true; do
+        [ ${elapsedsecs} -gt $((length*60)) ] && return
         pomo=$(compute $start)
         elapsedsecs=$(compute $start)
         elapsed=$(convertsecs $pomo)
@@ -129,9 +127,6 @@ cat <<EOBar
 ${period} >>>  ${spinner[$count]} ${remaining}s remaining    ${completed_pomodoros}
 EOBar
         sleep 1
-        if [ ${elapsedsecs} -gt $((length*60)) ]; then 
-            exit 0 
-        fi
         if [ $count -lt 7 ]; then
             ((count++))
         else
@@ -144,13 +139,25 @@ EOBar
 
 ##  This is the main pomodoro screen
 show_pom(){
+    period=${1}
+    length=${2}
+    start=$(date +%s)
 
-clear
+    while true; do
+        pomo=$(compute $start)
+        elapsedsecs=$(compute $start)
+        [ ${elapsedsecs} -gt $((length*60)) ] && return
+        elapsed=$(convertsecs $pomo)
+        remaining=$(remainingsecs $pomo $length)
+
+    clear
 
 cat <<EOF
 
 
                     Welcome to MyPomodoro!
+
+        ///////////////  Work Time  ///////////////////////
 
         Short break: ${short_break}     Elapsed: ${elapsed}
 
@@ -158,29 +165,22 @@ cat <<EOF
 
         Goal: ********     Completed: ${completed_pomodoros}
 EOF
-
+    sleep 1
+    done
 }
     
 
 ##  This is the main loop
 while true; do
-    #show_pom
-    #show_bar  "Work" ${pomodoro}
-    show_bar  "Short Break" ${short_break}
-    #pomo=$(compute $start_time)
-    #elapsed=$(convertsecs $pomo)
-    #remaining=$(remainingsecs $pomo $pomodoro)
-    #if ! (( $pomo < $durationinmins )) ; then
-    #    if  [[  $(( ${#completed_pomodoros} % 4 )) == 0 ]] && [[ ${#completed_pomodoros} -ne 0 ]]; then
-    #        run_break ${long_break}
-    #    else
-    #        run_break ${short_break}
-    #    fi
-    #    completed_pomodoros+=$(completed)
-    #    start_time=$(date +%s)
-    #    play_sound $start_sound
-    #fi
-    #sleep 1
+    show_pom "Work"  ${pomodoro}
+    if  [[  $(( ${#completed_pomodoros} % 4 )) == 0 ]] && [[ ${#completed_pomodoros} -ne 0 ]]; then
+        run_break ${long_break}
+    else
+        run_break ${short_break}
+    fi
+    completed_pomodoros+=$(completed)
+    start_time=$(date +%s)
+    play_sound $start_sound
 done
 
 
