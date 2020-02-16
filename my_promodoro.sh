@@ -116,24 +116,28 @@ show_bar(){
     period=${1}
     length=${2}
     start=$(date +%s)
-    spinner=('\' '|' '/' '--' '\' '|' '/' '--')
+    spinner=('\' '|' '/' '—' '\' '|' '/' '—')
 
 
     while true; do
-        now=$(date +%s)
+        pomo=$(compute $start)
         elapsedsecs=$(compute $start)
-        elapsed=$(remainingsecs $elapsedsecs $start)
+        elapsed=$(convertsecs $pomo)
+        remaining=$(remainingsecs $pomo $length)
         clear
 cat <<EOBar
-  ${period}      ${spinner[$count]}  ${elapsed}
+${period} >>>  ${spinner[$count]} ${remaining}s remaining    ${completed_pomodoros}
 EOBar
         sleep 1
+        if [ ${elapsedsecs} -gt $((length*60)) ]; then 
+            exit 0 
+        fi
         if [ $count -lt 7 ]; then
             ((count++))
         else
             count=0
         fi
-
+        
     done
 
 }
@@ -161,7 +165,8 @@ EOF
 ##  This is the main loop
 while true; do
     #show_pom
-    show_bar  "Short Break"  5
+    #show_bar  "Work" ${pomodoro}
+    show_bar  "Short Break" ${short_break}
     #pomo=$(compute $start_time)
     #elapsed=$(convertsecs $pomo)
     #remaining=$(remainingsecs $pomo $pomodoro)
