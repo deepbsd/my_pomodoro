@@ -12,13 +12,14 @@
 short_break=5
 long_break=20
 pomodoro=25
+goal="********"
 completed_pomodoros=""
 start_sound=./sounds/Ship_Bell-Mike_Koenig-1911209136.wav
 end_sound=./sounds/foghorn-daniel_simon.wav
 ((durationinmins=${pomodoro}*3600/60))
 
 ## Do run the i3bar version or regular version?
-[[ "$@" =~ 'b' ]] && run=true || unset run
+[[ "$@" =~ 'b' ]] && runinbar=true || unset runinbar
 
 ##  Set the start time in seconds
 start_time=$(date +%s)
@@ -127,7 +128,7 @@ show_bar(){
         remaining=$(remainingsecs $pomo $length)
         clear
 cat <<EOBar
-${period} >>>  ${spinner[$count]} ${remaining}s remaining    ${completed_pomodoros}
+${period} >>>  ${spinner[$count]} ${remaining}s remaining    ${#completed_pomodoros}/${#goal} complete
 EOBar
         sleep 1
         if [ $count -lt 7 ]; then
@@ -135,7 +136,6 @@ EOBar
         else
             count=0
         fi
-        
     done
 
 }
@@ -166,7 +166,7 @@ cat <<EOF
 
         Long break: ${long_break}     Remaining: ${remaining}
 
-        Goal: ********     Completed: ${completed_pomodoros}
+        Goal: ${goal}     Completed: ${completed_pomodoros}
 EOF
     sleep 1
     done
@@ -175,7 +175,7 @@ EOF
 
 ##  This is the main loop
 while true; do
-    [ "$run" ] && show_bar "Work" ${pomodoro} || show_pom "Work" ${pomodoro}
+    [ "$runinbar" ] && show_bar "Work" ${pomodoro} || show_pom "Work" ${pomodoro}
 
     if  [[  $(( ${#completed_pomodoros} % 4 )) == 0 ]] && [[ ${#completed_pomodoros} -ne 0 ]]; then
         run_break ${long_break}
