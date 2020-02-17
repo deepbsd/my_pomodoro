@@ -12,7 +12,7 @@
 short_break=5
 long_break=20
 pomodoro=25
-goal="********"
+goal="⌚⌚⌚⌚⌚⌚⌚⌚"
 completed_pomodoros=""
 start_sound=./sounds/Ship_Bell-Mike_Koenig-1911209136.wav
 end_sound=./sounds/foghorn-daniel_simon.wav
@@ -63,7 +63,7 @@ remainingsecs(){
 
 ## For showing a list of asterisks and completed Pomodoros
 completed(){
-    echo '*' 
+    echo '⌚' 
 }
 
 ##  Runs a break, either a short one or long one
