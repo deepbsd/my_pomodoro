@@ -123,14 +123,14 @@ show_bar(){
 
 
     while true; do
+        elapsedsecs=$(compute $start)
         [ ${elapsedsecs} -gt $((length*60)) ] && return
         pomo=$(compute $start)
-        elapsedsecs=$(compute $start)
         elapsed=$(convertsecs $pomo)
         remaining=$(remainingsecs $pomo $length)
         clear
 cat <<EOBar
-${period} >>>  ${spinner[$count]} ${remaining}s remaining    ${#completed_pomodoros}/${#goal} complete
+${period} >>>  ${spinner[$count]} ${remaining}s remaining  ${#completed_pomodoros}/${#goal} done
 EOBar
         sleep 1
         if [ $count -lt 7 ]; then
@@ -179,12 +179,15 @@ EOF
 while true; do
     [ "$runinbar" ] && show_bar "Work" ${pomodoro} || show_pom "Work" ${pomodoro}
 
-    if  [[  $(( ${#completed_pomodoros} % 4 )) == 0 ]] && [[ ${#completed_pomodoros} -ne 0 ]]; then
-        run_break ${long_break}
-    else
-        run_break ${short_break}
-    fi
     completed_pomodoros+=$(completed)
+    if  [[  $(( ${#completed_pomodoros} % 4 )) == 0 ]] && [[ ${#completed_pomodoros} -ne 0 ]]; then
+        play_sound $end_sound
+        [ "$runinbar" ] && show_bar "Long Break" ${long_break} || run_break ${long_break}
+    else
+        play_sound $end_sound
+        [ "$runinbar" ] && show_bar "Short Break" ${short_break} || run_break ${short_break}
+    fi
+    #completed_pomodoros+=$(completed)
     start_time=$(date +%s)
     play_sound $start_sound
 done
