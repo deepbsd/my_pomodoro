@@ -9,9 +9,9 @@
 #################################
 
 ##  Initial variables
-short_break=5
-long_break=20
-pomodoro=25
+short_break=1
+long_break=2
+pomodoro=1
 goal="⌚⌚⌚⌚⌚⌚⌚⌚"
 completed_pomodoros=""
 start_sound=./sounds/Ship_Bell-Mike_Koenig-1911209136.wav
@@ -98,13 +98,15 @@ run_break(){
         fi
 
         clear
-
+## Hot pink may not work well on light terminal but it does on dark terminal
 cat <<EOBreak
 
 
+        $(echo -e "\033[38;5;205m")
         //////////////////////   BREAK TIME  //////////////////////////////
 
         Break: ${break_type}    Elapsed: ${elapsed}   Remaining:  ${remaining}
+        $(echo -e "\033[m")
 
 EOBreak
 
