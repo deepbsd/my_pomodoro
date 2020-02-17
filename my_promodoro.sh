@@ -9,9 +9,9 @@
 #################################
 
 ##  Initial variables
-short_break=1
-long_break=2
-pomodoro=1
+short_break=5
+long_break=20
+pomodoro=25
 goal="⌚⌚⌚⌚⌚⌚⌚⌚"
 completed_pomodoros=""
 start_sound=./sounds/Ship_Bell-Mike_Koenig-1911209136.wav
