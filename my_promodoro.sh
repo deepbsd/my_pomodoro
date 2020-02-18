@@ -18,7 +18,7 @@ start_sound=./sounds/Ship_Bell-Mike_Koenig-1911209136.wav
 end_sound=./sounds/foghorn-daniel_simon.wav
 ((durationinmins=${pomodoro}*3600/60))
 
-## Do run the i3bar version or regular version?
+## Run the i3bar version or regular version?
 [[ "$@" =~ 'b' ]] && runinbar=true || unset runinbar
 
 ##  Set the start time in seconds
