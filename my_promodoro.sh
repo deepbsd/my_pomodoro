@@ -24,8 +24,10 @@ end_sound=./sounds/foghorn-daniel_simon.wav
 ##  Set the start time in seconds
 start_time=$(date +%s)
 
-## make sure 'play' is installed...
+## Play start or end sounds for periods
 play_sound(){
+    ## make sure 'play' is installed...
+    command -v play >/dev/null 2>&1 || { echo >&2 "play (from sox app) is required but not installed. aborting..."; exit 1; } 
     file=${1}
     play -q $file 2>/dev/null
 }
