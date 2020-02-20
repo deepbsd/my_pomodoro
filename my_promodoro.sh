@@ -12,7 +12,9 @@
 short_break=5
 long_break=20
 pomodoro=25
-goal="⌚⌚⌚⌚⌚⌚⌚⌚"
+## Forgot that all terminals are not UTF
+#goal="⌚⌚⌚⌚⌚⌚⌚⌚"
+goal="********"
 completed_pomodoros=""
 start_sound=./sounds/Ship_Bell-Mike_Koenig-1911209136.wav
 end_sound=./sounds/foghorn-daniel_simon.wav
@@ -131,9 +133,7 @@ show_bar(){
         elapsed=$(convertsecs $pomo)
         remaining=$(remainingsecs $pomo $length)
         clear
-cat <<EOBar
-${period} >>>  ${spinner[$count]} ${remaining}s remaining  ${#completed_pomodoros}/${#goal} done
-EOBar
+        printf "%s > %s %s remaining %d/%d done" ${period} ${spinner[$count]} ${remaining} ${#completed_pomodoros} ${#goal} 
         sleep 1
         if [ $count -lt 7 ]; then
             ((count++))
