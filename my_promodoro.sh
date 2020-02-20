@@ -187,7 +187,6 @@ while true; do
         play_sound $end_sound
         [ "$runinbar" ] && show_bar "Short Break" ${short_break} || run_break ${short_break}
     fi
-    #completed_pomodoros+=$(completed)
     start_time=$(date +%s)
     play_sound $start_sound
 done
