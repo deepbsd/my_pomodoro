@@ -183,11 +183,9 @@ while true; do
 
     completed_pomodoros+=$(completed)
     if  [[  $(( ${#completed_pomodoros} % 4 )) == 0 ]] && [[ ${#completed_pomodoros} -ne 0 ]]; then
-        play_sound $end_sound
-        [ "$runinbar" ] && show_bar "Long Break" ${long_break} || run_break ${long_break}
+        [ "$runinbar" ] && play_sound $end_sound && show_bar "Long Break" ${long_break} || run_break ${long_break}
     else
-        play_sound $end_sound
-        [ "$runinbar" ] && show_bar "Short Break" ${short_break} || run_break ${short_break}
+        [ "$runinbar" ] && play_sound $end_sound && show_bar "Short Break" ${short_break} || run_break ${short_break}
     fi
     start_time=$(date +%s)
     play_sound $start_sound
