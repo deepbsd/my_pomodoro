@@ -133,7 +133,7 @@ show_bar(){
         elapsed=$(convertsecs $pomo)
         remaining=$(remainingsecs $pomo $length)
         clear
-        printf "%s > %s %s remaining %d/%d done" ${period} ${spinner[$count]} ${remaining} ${#completed_pomodoros} ${#goal} 
+        printf "%s > %s %ss left %d/%d done" ${period} ${spinner[$count]} ${remaining} ${#completed_pomodoros} ${#goal} 
         sleep 1
         if [ $count -lt 7 ]; then
             ((count++))
@@ -183,9 +183,9 @@ while true; do
 
     completed_pomodoros+=$(completed)
     if  [[  $(( ${#completed_pomodoros} % 4 )) == 0 ]] && [[ ${#completed_pomodoros} -ne 0 ]]; then
-        [ "$runinbar" ] && play_sound $end_sound && show_bar "Long Break" ${long_break} || run_break ${long_break}
+        [ "$runinbar" ] && play_sound $end_sound && show_bar "Long_Break" ${long_break} || run_break ${long_break}
     else
-        [ "$runinbar" ] && play_sound $end_sound && show_bar "Short Break" ${short_break} || run_break ${short_break}
+        [ "$runinbar" ] && play_sound $end_sound && show_bar "Short_Break" ${short_break} || run_break ${short_break}
     fi
     start_time=$(date +%s)
     play_sound $start_sound
